@@ -1,5 +1,5 @@
 from enum import Enum
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Path
 from todo import todo_router
 from model import Item
 from typing import List
@@ -128,3 +128,15 @@ async def hidden_query_route(
     if hidden_query:
         return {"hidden_query": hidden_query}
     return {"hidden_query": "Not found"}
+
+
+@app.get("/numeric_validation/{item_id}")
+async def numeric_validation_route(
+    *,
+    item_id: int = Path(..., title="id of the item", gt=10, le=100),
+    q: str = "hello",
+):
+    results = {"item_id": item_id}
+    if q:
+        results.update({"q": q})
+    return results
